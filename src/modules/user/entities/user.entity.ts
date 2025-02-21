@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
+  UpdateDateColumn, JoinTable, ManyToMany, OneToMany
 } from 'typeorm';
+import { UserRole } from './user_role.entity';
+import { Role } from '../../role/entities/role.entity';
 
 @Entity('users')
 export class User {
@@ -32,6 +34,18 @@ export class User {
 
   @Column({ length: 500, nullable: true })
   profile_picture_url?: string;
+
+
+  @OneToMany(() => UserRole, (userRole) => userRole.user)
+  userRoles: UserRole[];
+
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable({
+    name: 'user_role',
+    joinColumn: { name: 'user_id', referencedColumnName: 'user_id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'role_id' },
+  })
+  roles: Role[];
 
   @CreateDateColumn()
   created_at: Date;
