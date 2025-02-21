@@ -8,6 +8,9 @@ import {
 } from 'typeorm';
 import { UserRole } from './user_role.entity';
 import { Role } from '../../role/entities/role.entity';
+import { UserTeam } from '../../team/entities/user_team.entity';
+import { Team } from '../../team/entities/team.entity';
+
 
 @Entity('users')
 export class User {
@@ -46,6 +49,16 @@ export class User {
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'role_id' },
   })
   roles: Role[];
+
+
+
+
+  @OneToMany(() => UserTeam, (userTeam) => userTeam.user)
+  userTeams: UserTeam[];
+
+  @OneToMany(() => Team, (team) => team.lead)
+  teamsLead: Team[];
+
 
   @CreateDateColumn()
   created_at: Date;
