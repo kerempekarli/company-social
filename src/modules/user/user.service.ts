@@ -106,4 +106,20 @@ export class UserService {
     user.roles.push(role);
     return this.userRepository.save(user);
   }
+
+  async removeRole(userId: number, roleId: number): Promise<User> {
+  const user = await this.findOne(userId);
+  const role = await this.roleRepository.findOne({
+    where: { role_id: roleId },
+  });
+
+  if (!role) {
+    throw new NotFoundException(`Role with ID ${roleId} not found`);
+  }
+
+  // Kullanıcının bu rolü olup olmadığını kontrol et
+  user.roles = user.roles.filter((r) => r.role_id !== roleId);
+  return this.userRepository.save(user);
+}
+
 }

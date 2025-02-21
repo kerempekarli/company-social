@@ -4,65 +4,58 @@ import {
   Post,
   Patch,
   Delete,
-  Body,
   Param,
+  Body,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
-
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CreateUserDto } from './dto/create-user.dto'; // ✅ Doğru DTO
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  /**
-   * Tüm kullanıcıları listeler.
-   * GET /user
-   */
   @Get()
-  findAll(): Promise<User[]> {
+  findAll() {
     return this.userService.findAll();
   }
 
-  /**
-   * Tek bir kullanıcıyı döndürür.
-   * GET /user/:id
-   */
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
-  /**
-   * Yeni kullanıcı oluşturur.
-   * POST /user
-   */
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  create(@Body() createUserDto: CreateUserDto) { // ✅ Hata burada düzeltiliyor
     return this.userService.create(createUserDto);
   }
 
-  /**
-   * Mevcut bir kullanıcıyı günceller.
-   * PATCH /user/:id
-   */
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
-  /**
-   * Bir kullanıcıyı siler.
-   * DELETE /user/:id
-   */
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(id);
+  }
+
+  @Patch(':userId/assign-role')
+  assignRole(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body('role_id', ParseIntPipe) roleId: number,
+  ) {
+    return this.userService.assignRole(userId, roleId);
+  }
+
+  @Patch(':userId/remove-role')
+  removeRole(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Body('role_id', ParseIntPipe) roleId: number,
+  ) {
+    return this.userService.removeRole(userId, roleId);
   }
 }
