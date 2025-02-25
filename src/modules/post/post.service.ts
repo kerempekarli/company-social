@@ -3,17 +3,21 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class PostService {
     constructor(
         @InjectRepository(Post)
         private readonly postRepository: Repository<Post>,
+
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
     ) { }
 
-    findAll(): Promise<Post[]> {
+    async findAll(): Promise<Post[]> {
         return this.postRepository.find({
-            relations: ['user'], // if you want user info
+            relations: ['user'], // Kullanıcı bilgilerini çek
         });
     }
 
@@ -28,8 +32,19 @@ export class PostService {
         return post;
     }
 
-    create(data: Partial<Post>): Promise<Post> {
-        const newPost = this.postRepository.create(data);
+    async create(data: Partial<Post>): Promise<Post> {
+        // ✅ Kullanıcıyı veritabanından getir
+        const user = await this.userRepository.findOne({
+            where: { user_id: data.user?.user_id },
+        });
+
+        if (!user) {
+            throw new NotFoundException(`User with ID ${data.user?.user_id} not found`);
+        }
+
+        // ✅ Kullanıcı ile post ilişkisini kur
+        const newPost = this.postRepository.create({ ...data, user });
+
         return this.postRepository.save(newPost);
     }
 
