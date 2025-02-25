@@ -20,18 +20,21 @@ import { PostController } from './modules/post/post.controller';
 import { AttachmentController } from './modules/attachment/attachment.controller';
 import { CommentController } from './modules/comment/comment.controller';
 import { ReactionController } from './modules/reaction/reaction.controller';
+import { NotificationModule } from './modules/notification/notification.module';
+import { NotificationController } from './modules/notification/notification.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
   TypeOrmModule.forRoot(ormconfig), UserModule, AuthModule, DepartmentModule, TeamModule, PostModule, AttachmentModule,
-    CommentModule, ReactionModule
+    CommentModule, ReactionModule, NotificationModule
 
   ],
   controllers: [AppController, UserController, AuthController, TeamController, DepartmentController,
     PostController,
     AttachmentController,
     CommentController,
-    ReactionController],
+    ReactionController,
+    NotificationController],
   providers: [AppService],
 })
 export class AppModule { }
