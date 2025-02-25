@@ -11,12 +11,27 @@ import { UserModule } from './modules/user/user.module';
 import { DepartmentModule } from './modules/department/department.module';
 import { TeamModule } from './modules/team/team.module';
 import { TeamController } from './modules/team/team.controller';
+import { PostModule } from './modules/post/post.module';
+import { AttachmentModule } from './modules/attachment/attachment.module';
+import { CommentModule } from './modules/comment/comment.module';
+import { ReactionModule } from './modules/reaction/reaction.module';
+import { DepartmentController } from './modules/department/department.controller';
+import { PostController } from './modules/post/post.controller';
+import { AttachmentController } from './modules/attachment/attachment.controller';
+import { CommentController } from './modules/comment/comment.controller';
+import { ReactionController } from './modules/reaction/reaction.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
-  TypeOrmModule.forRoot(ormconfig), UserModule, AuthModule, DepartmentModule, TeamModule
+  TypeOrmModule.forRoot(ormconfig), UserModule, AuthModule, DepartmentModule, TeamModule, PostModule, AttachmentModule,
+    CommentModule, ReactionModule
+
   ],
-  controllers: [AppController, UserController, AuthController, TeamController],
+  controllers: [AppController, UserController, AuthController, TeamController, DepartmentController,
+    PostController,
+    AttachmentController,
+    CommentController,
+    ReactionController],
   providers: [AppService],
 })
 export class AppModule { }
