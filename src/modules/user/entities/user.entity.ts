@@ -10,6 +10,7 @@ import { UserRole } from './user_role.entity';
 import { Role } from '../../role/entities/role.entity';
 import { UserTeam } from '../../team/entities/user_team.entity';
 import { Team } from '../../team/entities/team.entity';
+import { Post } from 'src/modules/post/entities/post.entity';
 
 
 @Entity('users')
@@ -50,7 +51,8 @@ export class User {
   })
   roles: Role[];
 
-
+  @OneToMany(() => Post, (post) => post.user, { cascade: true }) // ❗
+  posts: Post[]; // Kullanıcının gönderdiği postlar
 
 
   @OneToMany(() => UserTeam, (userTeam) => userTeam.user)
