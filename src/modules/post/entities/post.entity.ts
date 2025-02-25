@@ -14,8 +14,8 @@ export class Post {
     @PrimaryGeneratedColumn({ name: 'post_id' })
     postId: number;
 
-    @ManyToOne(() => User, (user) => user.posts, { eager: false })
-    user: User; // user_id foreign key
+    @ManyToOne(() => User, (user) => user.posts, { eager: true, onDelete: 'CASCADE' }) // ✅ Kullanıcı bilgisiyle bağladık
+    user: User;
 
     @Column({ nullable: true })
     title: string;
